@@ -1,0 +1,36 @@
+{% extends 'basic.html' %}
+
+{% block title %} Home {% endblock %}
+
+
+{% block items %}
+
+{% load tz %}
+
+<div class="container me-1">
+    <div class="card-group">
+        <div class="row" style="overflow: hidden;">
+            {% for recipe in recipes %}
+
+            <div class="card col-3 shadow m-3">
+                <img src="/media/{{recipe.resource_image}}" class="rounded" style="height: 300px" alt="{{recipe.resource_name}}">
+                <div class="card-body" style="max-height: 350px; overflow: hidden;">
+                    <h5 class="card-title text-uppercase">{{recipe.resource_name}}</h5>
+                    <p class="card-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{recipe.description}}</p>
+                    <p class="card-text"><small class="text-body-secondary">Rs.{{recipe.price}}  <br>             {{ recipe.timestamp|timezone:"Asia/Kathmandu"|date:"F j, Y H:i" }}</small></p>
+                    
+
+                {% if request.user == recipe.user %}
+                    <a href="delete_recipe/{{recipe.id}}" class="btn btn-outline-danger">Delete</a>
+                {% endif %}
+
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

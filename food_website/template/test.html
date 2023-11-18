@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customized Text Area</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.custom-textarea {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+}
+
+.textarea-label {
+    margin-bottom: 10px; /* Add some space between label and textarea */
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: none;
+    outline: none;
+}
+
+textarea::placeholder {
+    color: #95a5a6;
+    font-style: italic;
+}
+
+textarea:focus {
+    border-color: #2980b9;
+    box-shadow: 0 0 5px #2980b9;
+}
+
+    </style>
+</head>
+<body>
+    <div class="custom-textarea">
+        <label for="myTextarea" class="textarea-label">Your Message</label>
+        <textarea id="myTextarea" rows="4" cols="50" placeholder="Type your text here..."></textarea>
+    </div>
+</body>
+</html>
