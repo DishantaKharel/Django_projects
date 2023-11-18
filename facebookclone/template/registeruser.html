@@ -1,0 +1,63 @@
+{% extends 'basic.html' %}
+
+{% block titile %} Registration user   {% endblock %}
+
+
+
+{% block css %}
+        .round-box {
+            width: 100px;
+            height: 100px;
+            background-color: #007BFF;
+            border-radius: 50%;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            left: 50px;
+        }
+
+        /* Style the camera icon */
+        .camera-icon {
+            color: #fff;
+            font-size: 30px;
+        }
+
+        /* Hide the file input */
+        #fileInput {
+            display: none;
+        }
+{% endblock %}
+
+{% block js %}
+        document.querySelector('.round-box').addEventListener('click', function () {
+            document.querySelector('#fileInput').click();
+        });
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <form class="col-6 mx-auto card p-4 shadow" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2 class="m-0">Create a profile</h2><hr class="pb-3">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label" style="margin-top: 45px;">Profile Picture</label>
+            </div>
+            <div class="col-md-8">
+                <label for="fileInput" class="round-box"> <i class="fas fa-camera camera-icon"></i> </label>
+                <input type="file" id="fileInput" name="profile_pic">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label  class="form-label">Bio</label>
+            <textarea class="form-control" name="bio"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Create user</button>
+    </form>
+
+</div>
+{% endblock %}

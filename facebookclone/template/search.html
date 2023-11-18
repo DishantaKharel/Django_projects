@@ -1,0 +1,65 @@
+{% extends 'basic.html' %}
+
+{% block titile %}  Search result  {% endblock %}
+
+
+{% block css %}
+
+.circle-image {
+    width: 150px; /* Adjust the size as needed */
+    height: 150px; /* Make sure width and height are the same for a circle */
+    border-radius: 50%; /* Makes the image a circle */
+    object-fit: cover; /* Maintains aspect ratio and covers the entire circle */
+}
+
+{% endblock  %}
+
+
+
+{% block body %}
+    {% for userpost in userposts %}
+
+    {% for userprofile in userprofiles %}
+
+    {% if userpost.user == userprofile.user %}
+
+    <div class="container mt-3">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-7">
+                <div class="card text-bg-dark">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <img src="/media/{{userprofile.profile_pic}}" alt="Profile Picture" class="img-fluid circle-image" style="max-width: 80px; max-height: 80px;">
+                            <div class="ms-3">
+                            <h5>{{userprofile.user.first_name}} {{userprofile.user.last_name}}</h5>
+                            </div>
+                        </div>
+                        <div class="text-sm-end">
+                            {{ userpost.timestamp }}
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        {% if userpost.status %}
+                        <h5 class="card-title">{{ userpost.status}}</h5><br>
+                        {% endif %}
+                        {% if userpost.feed_photo %}
+                        <img src="/media/{{userpost.feed_photo}}" alt="Profile Image" class="mx-auto d-block w-100" style="height: 650px;">
+                        {% endif %}
+                        {% if userpost.user == request.user  %}
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-danger mt-3" href="/delete_post/{{userpost.id}}">Delete Post</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endfor %}
+ {% endfor %}
+
+
+{% endblock %}

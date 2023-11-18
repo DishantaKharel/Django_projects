@@ -1,0 +1,296 @@
+{% extends 'basic.html' %}
+
+{% block titile %} User Profile   {% endblock %}
+
+{% block css %}
+
+.circle-image {
+    width: 150px; /* Adjust the size as needed */
+    height: 150px; /* Make sure width and height are the same for a circle */
+    border-radius: 50%; /* Makes the image a circle */
+    object-fit: cover; /* Maintains aspect ratio and covers the entire circle */
+}
+.center-vertically {
+    position: relative;
+    right: 140px;
+    top: 35px;
+}
+
+hr {
+    border: 3px solid #000000;
+}
+.btn.add {
+    cursor: pointer;
+    position: relative;
+    padding: 10px 20px;
+    background: #86b7fe;
+    font-size: 20px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    transition: all 1s;
+    width: auto;
+    left: 90%;
+    top: -110px
+}
+.btn.add:after, .btn.add:before {
+    content: " ";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    border: 0px solid #fff;
+    transition: all 1s;
+}
+.btn.add:after {
+    top: -1px;
+    left: -1px;
+    border-top: 5px solid black;
+    border-left: 5px solid black;
+}
+.btn.add:before {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 5px solid black;
+    border-right: 5px solid black;
+}
+.btn.add:hover {
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+.btn.add:hover:before, .btn:hover:after {
+    width: 100%;
+    height: 100%;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaaaaa;
+    position: relative;
+    left:95%;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.upload-btn {
+    display: inline-block;
+    background-color: #3498db; /* Blue color */
+    color: #fff; /* White text color */
+    padding: 10px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.upload-btn input[type=file] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-btn:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+}
+}
+
+.custom-textarea {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+}
+
+.textarea-label {
+    margin-bottom: 10px; /* Add some space between label and textarea */
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: none;
+    outline: none;
+}
+
+textarea::placeholder {
+    color: #95a5a6;
+    font-style: italic;
+}
+
+textarea:focus {
+    border-color: #2980b9;
+    box-shadow: 0 0 5px #2980b9;
+}
+
+{% endblock %}
+
+
+{% block head %} <a class="nav-link" aria-current="page" href="/">Home</a> {% endblock %}
+
+{% block profile %} <a class="nav-link active" href="/profile/">Profile</a>  {% endblock %}
+
+
+{% block body %}
+
+    {% for userprofile in userprofiles %}
+        <div class="container my-3 overflow-hidden">
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="/media/{{userprofile.profile_pic}}" alt="Profile Image" class="img-fluid circle-image">
+                </div>
+                <div class="col-md-9 center-vertically">
+                    <h1>{{userprofile.user.first_name}} {{userprofile.user.last_name}}</h1>
+                      @{{userprofile.user.username}}<br><br>
+                    <h3>{{userprofile.bio}}</h3>
+                </div><br><br><br><br><br><br>
+                <button class="btn add " id="showFormButton">Add post </button>
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="custom-textarea">
+                                <label for="myTextarea" class="textarea-label">Status</label>
+                                <textarea id="myTextarea" rows="4" cols="50" placeholder="Type your text here..." name="status"></textarea>
+                            </div> <br>
+                            <label>Photo</label><br>
+                            <label class="upload-btn">
+                            <span class="btn-text">Upload an Image</span>
+                            <input type="file" name="photo" accept="image" />
+                            </label><br><br><br>
+                            <button type="submit" class="btn btn-outline-success">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div><hr>
+
+        </div>
+
+    {% for userpost in userposts %}
+    {% if userpost.feed_photo or userpost.status %}
+    <div class="container mt-3">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-7">
+                <div class="card text-bg-dark">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <img src="/media/{{userprofile.profile_pic}}" alt="Profile Image" class="img-fluid circle-image" style="max-width: 80px; max-height: 80px;">
+                            <div class="ms-3">
+                            <h5>{{userprofile.user.first_name}} {{userprofile.user.last_name}}</h5>
+                            </div>
+                        </div>
+                        <div class="text-sm-end">
+                            {{ userpost.timestamp }}
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        {% if userpost.status %}
+                        <h5 class="card-title">{{ userpost.status}}</h5><br>
+                        {% endif %}
+                        {% if userpost.feed_photo %}
+                        <img src="/media/{{userpost.feed_photo}}" alt="Profile Image" class="mx-auto d-block w-100" style="height: 650px;">
+                        {% endif %}
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-danger mt-3" href="/delete_post/{{userpost.id}}">Delete Post</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endfor %}
+
+    {% endfor %}
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% block js %}
+
+const showFormButton = document.getElementById('showFormButton');
+const modal = document.getElementById('myModal');
+const closeButton = document.querySelector('.close');
+
+showFormButton.addEventListener('click', function() {
+    modal.style.display = 'block';
+});
+
+closeButton.addEventListener('click', function() {
+    modal.style.display = 'none';
+});
+
+window.addEventListener('click', function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+});
+
+{% endblock %}
